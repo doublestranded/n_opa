@@ -60,37 +60,81 @@ module NOpa
     end
 
     def profit_compare(values, assignments, i, t)
-      values.each_with_index.map do |v, j|
-        if assignments.dig(j, i - 1) && assignments.dig(j, i - 1) == t
-          0
-        elsif j == 2
-          v.nil? ? @matrix[i][t] : v + @matrix[i][t]
-        elsif j == 1
-          v.nil? ? 0 : (assignments[1][i].nil? ? v + @matrix[i][t-1] : v)
-        else
-          v.nil? || (assignments[0][-1] and assignments[0][-1] < t) ? 0 : v
-        end
-      end.each_with_index.max_by { |v, j| v }
+      a = if assignments[0][i - 1] and assignments[0][i - 1] == t
+        0
+      elsif values[0].nil? || (assignments[0][-1] and assignments[0][-1] < t)
+        0
+      else
+        values[0]
+      end
+
+      b = if assignments[1][i - 1] and assignments[1][i - 1] == t
+        0
+      elsif values[1].nil?
+        0
+      elsif assignments[1][i].nil?
+        values[1] + @matrix[i][t-1]
+      else
+        values[1]
+      end
+
+      c = if assignments[2][i - 1] and assignments[2][i - 1] == t
+        0
+      elsif values[2].nil?
+        @matrix[i][t]
+      else
+        values[2] + @matrix[i][t]
+      end
+
+      if a >= b && a >= c
+        return [a, 0]
+      elsif b >= c
+        return [b, 1]
+      else
+        return [c, 2]
+      end
     end
 
     def cost_compare(values, assignments, i, t)
-      values.each_with_index.map do |v, j|
-        if assignments.dig(j, i - 1) && assignments.dig(j, i - 1) == t
-          Float::INFINITY
-        elsif j == 2
-          v.nil? ? @matrix[i][t] : v + @matrix[i][t]
-        elsif j == 1
-          v.nil? ? Float::INFINITY : (assignments[1][i].nil? ? v + @matrix[i][t-1] : v)
-        else
-          v.nil? || (assignments[0][-1] and assignments[0][-1] < t) ? Float::INFINITY : v
-        end
-      end.each_with_index.min_by { |v, j| v }
+      a = if assignments[0][i - 1] and assignments[0][i - 1] == t
+        Float::INFINITY
+      elsif values[0].nil? || (assignments[0][-1] and assignments[0][-1] < t)
+        Float::INFINITY
+      else
+        values[0]
+      end
+
+      b = if assignments[1][i - 1] and assignments[1][i - 1] == t
+        Float::INFINITY
+      elsif values[1].nil?
+        Float::INFINITY
+      elsif assignments[1][i].nil?
+        values[1] + @matrix[i][t-1]
+      else
+        values[1]
+      end
+
+      c = if assignments[2][i - 1] and assignments[2][i - 1] == t
+        Float::INFINITY
+      elsif values[2].nil?
+        @matrix[i][t]
+      else
+        values[2] + @matrix[i][t]
+      end
+
+      if a <= b && a <= c
+        return [a, 0]
+      elsif b <= c
+        return [b, 1]
+      else
+        return [c, 2]
+      end
     end
 
     def base?(i, t)
       i == -1 ||
       t < i ||
-      (t > ((@num_slots - 1) - (@num_items - (i + 1))))
+      (t > (@num_slots - @num_items  + i))
     end
 
     def downStack(i, t)
@@ -111,7 +155,6 @@ module NOpa
         @memo[i-1][t] = [nil, []] if base?(i-1, t)
         @memo[i][t-1] = [nil, []] if base?(i, t-1)
         @memo[i-1][t-1] = [nil, []] if base?(i-1, t-1)
-
 
         unless @memo[i-1][t]
           downStack(i-1, t)
