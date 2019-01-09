@@ -1,7 +1,13 @@
 # NOpa
 
-The solution to the Order-Preserving Assignment Problem without Contiguity solved by Dimitris Alevras here:
+An implementation of the algorithm for solving the problem of order preserving assignments without contiguity created and proved by Dimitris Alevras here:
 https://www.sciencedirect.com/science/article/pii/0012365X9500325Q
+
+The implementation is iterative instead of recursive, and allows for costs instead of profits.
+
+D Alevras,
+Order preserving assignments without contiguity
+Discrete Mathematics, 163 (1997), pp. 1-11
 
 ## Installation
 
@@ -21,7 +27,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+algo = NOpa::DynamicAlgorithm.new(input_matrix)
+algo.compute
+access assignments with algo.assignments
 
 ## Development
 
