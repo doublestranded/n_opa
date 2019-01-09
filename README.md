@@ -5,9 +5,9 @@ https://www.sciencedirect.com/science/article/pii/0012365X9500325Q
 
 The implementation is iterative instead of recursive, and allows for costs instead of profits.
 
-D Alevras,
-Order preserving assignments without contiguity
-Discrete Mathematics, 163 (1997), pp. 1-11
+D Alevras,  
+Order preserving assignments without contiguity   
+Discrete Mathematics, 163 (1997), pp. 1-11  
 
 ## Installation
 
