@@ -30,8 +30,8 @@ Or install it yourself as:
 ```
 algo = NOpa::DynamicAlgorithm.new(input_matrix)  
 algo.compute  
-access assignments with algo.assignments 
 ```
+access assignments with `algo.assignments`
 
 ## Development
 
