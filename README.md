@@ -14,7 +14,7 @@ Discrete Mathematics, 163 (1997), pp. 1-11
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'n_opa'
+gem 'n_opa', git: 'git@github.com:doublestranded/n_opa', branch: 'master' 
 ```
 
 And then execute:
@@ -27,9 +27,9 @@ Or install it yourself as:
 
 ## Usage
 
-algo = NOpa::DynamicAlgorithm.new(input_matrix)
-algo.compute
-access assignments with algo.assignments
+algo = NOpa::DynamicAlgorithm.new(input_matrix)  
+algo.compute  
+access assignments with algo.assignments  
 
 ## Development
 
@@ -39,7 +39,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/n_opa.
+Bug reports and pull requests are welcome on GitHub at https://github.com/doublestranded/n_opa.
 
 ## License
 
