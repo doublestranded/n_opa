@@ -1,20 +1,25 @@
 # NOpa
 
-An implementation of the algorithm for solving the problem of order preserving assignments without contiguity created and proved by Dimitris Alevras here:
+An implementation of the algorithm for solving the problem of order preserving assignments without contiguity (N-Opa) created and proved by Dimitris Alevras here:
 https://www.sciencedirect.com/science/article/pii/0012365X9500325Q
+
+The N-Opa problem is to maximize the weighted assignments of items to slots while each
+successive slot assignment does not break the order of the items (please see the paper for a more precise mathematical definition). You can imagine modeling this problem with a bipartite graph where the final assignment edges never cross.
+
+The primary use for this gem is to determine accurate transit stop distances along route lines where such data is not provided. See https://github.com/transitland/transitland-datastore/pull/1271
 
 The implementation is iterative instead of recursive, and allows for costs instead of profits.
 
 D Alevras,  
-Order preserving assignments without contiguity   
-Discrete Mathematics, 163 (1997), pp. 1-11  
+Order preserving assignments without contiguity  
+Discrete Mathematics, 163 (1997), pp. 1-11
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'n_opa', git: 'git@github.com:doublestranded/n_opa', branch: 'master' 
+gem 'n_opa', git: 'git@github.com:doublestranded/n_opa', branch: 'master'
 ```
 
 And then execute:
@@ -28,9 +33,10 @@ Or install it yourself as:
 ## Usage
 
 ```
-algo = NOpa::DynamicAlgorithm.new(input_matrix)  
-algo.compute  
+algo = NOpa::DynamicAlgorithm.new(input_matrix)
+algo.compute
 ```
+
 access assignments with `algo.assignments`
 
 ## Development
