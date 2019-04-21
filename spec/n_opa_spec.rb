@@ -86,7 +86,7 @@ RSpec.describe NOpa do
         it { expect(algorithm.assignments).to eq([0,1]) }
       end
 
-      context 'having first and last out of order' do
+      context 'having highest profit choices out of order' do
         let(:profits) { [[3,1,1,1,4],[1,1,5,1,1],[4,1,1,1,3]] }
 
         it 'computes 3 assignees' do
@@ -152,7 +152,7 @@ RSpec.describe NOpa do
       it { expect(algorithm.assignments).to eq([0,1]) }
     end
 
-    context 'having out of order assignments' do
+    context 'having lowest value choices out of order' do
       let(:costs) { [[2,4,0],[1,4,2]] }
       before { algorithm.compute }
 
@@ -175,11 +175,30 @@ RSpec.describe NOpa do
       it { expect(algorithm.assignments).to eq([0,1,3]) }
     end
 
-    context 'max match not optimal choice for each of every item' do
+    context 'min match not optimal choice for each of every item' do
+      # choosing the min value without regard to order
+      # would result in [2,3,2]
+
       let(:costs) { [[2,1,0,2,2], [2,3,1,0,2], [2,3,0,1,4]] }
       before { algorithm.compute }
 
       it { expect(algorithm.assignments).to eq([1,2,3]) }
+    end
+
+    context 'having a solution a greedy algorithm would miss' do
+      let(:costs) { [[1,0,2,2], [2,0,1,2], [3,2,0,1]] }
+      let(:greedy_assignments) do
+        first = 0
+        costs.each.map do |item|
+          m = item[first..-1].each_with_index.min_by { |c, t| c }[1] + first
+          first = m + 1
+          m
+        end
+      end
+      before { algorithm.compute }
+
+      it { expect(greedy_assignments).to eq([1,2,3]) }
+      it { expect(algorithm.assignments).to eq([0,1,2]) }
     end
 
     context 'complex' do
@@ -187,7 +206,6 @@ RSpec.describe NOpa do
       let(:costs) { File.open(root + 'complex-array.yml', 'r') { |f| YAML::load(f)  } }
       subject { algorithm.compute }
 
-      # it { expect{ subject }.to perform_power }
       it { subject; expect(algorithm.assignments).to eq([0, 10, 11, 13, 14, 15, 17, 21, 22, 23, 24, 25, 28, 29, 31, 32, 33, 34, 35, 36, 39, 40, 42, 43, 45, 47, 48, 49, 50, 52, 54, 55, 58, 63, 71]) }
     end
 
@@ -197,7 +215,17 @@ RSpec.describe NOpa do
       subject { algorithm.compute }
 
       it { subject; expect(algorithm.assignments).to eq([21,35,51,63,79,91,103,113,127,139,165,178,190,204,216,233,255,264,281,305,313,331,342,351,358,371,389,405,416,439,466,499,506,515,546,592,607,624,632,646,657,666,680,693,706,716,725,733,739,747,762,773,787,802,812,821,835,846,853,866,875,892,905,914,921,944,961,969,982,990,1009,1011,1029,1041,1056,1067,1072,1091,1097,1105,1109,1125,1127,1150,1160,1172]) }
-      # it { expect{ subject }.to perform_power }
     end
+
+    # describe 'runtime complexity' do
+    #   let(:benchmarks) { bench_range(4, 512) }
+    #   let(:inputs) do
+    #     benchmarks.map do |b|
+    #       Array.new(b) { Array.new(3*b) { rand(10) } }
+    #     end
+    #   end
+    #
+    #   it { expect{ |n, i| NOpa::DynamicAlgorithm.new(inputs[i], costs: true).compute }.to perform_power.in_range(benchmarks[0], benchmarks[-1]).sample(10).times }
+    # end
   end
 end
