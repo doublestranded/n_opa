@@ -137,17 +137,12 @@ module NOpa
       (t > (@num_slots - @num_items  + i))
     end
 
-    def downStack(i, t)
+    def func(i, t)
+      return [nil, []] if base?(i, t)
+
       i.downto(0) do |j|
         @stack.push([j, t])
       end
-    end
-
-    def func(i, t)
-      @memo[i][t] = [nil, []] if base?(i, t)
-      return @memo[i][t] unless @memo.dig(i, t).nil?
-
-      downStack(i, t)
 
       while @stack.any?
         i, t = @stack.last
@@ -157,17 +152,17 @@ module NOpa
         @memo[i-1][t-1] = [nil, []] if base?(i-1, t-1)
 
         unless @memo[i-1][t]
-          downStack(i-1, t)
+          @stack.push([i-1, t])
           next
         end
 
         unless @memo[i][t-1]
-          downStack(i, t-1)
+          @stack.push([i, t-1])
           next
         end
 
         unless @memo[i-1][t-1]
-          downStack(i-1, t-1)
+          @stack.push([i-1, t-1])
           next
         end
 
