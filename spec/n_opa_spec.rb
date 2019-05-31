@@ -105,10 +105,6 @@ RSpec.describe NOpa do
 
         it { expect(algorithm.assignments).to eq([0,2,4]) }
       end
-
-      # context 'complex' do
-      #   let(:profits) { [] }
-      # end
     end
   end
 
@@ -152,11 +148,23 @@ RSpec.describe NOpa do
       it { expect(algorithm.assignments).to eq([0,1]) }
     end
 
-    context 'having lowest value choices out of order' do
+    context 'having the global minimum cost match be out of order - 1' do
+      # would be [2,0] without order condition
+
       let(:costs) { [[2,4,0],[1,4,2]] }
       before { algorithm.compute }
 
       it { expect(algorithm.assignments).to eq([0,2]) }
+    end
+
+    context 'having the global minimum cost match be out of order - 2' do
+      # choosing the min value without regard to order
+      # would result in [2,3,2]
+
+      let(:costs) { [[2,1,0,2,2], [2,3,1,0,2], [2,3,0,1,4]] }
+      before { algorithm.compute }
+
+      it { expect(algorithm.assignments).to eq([1,2,3]) }
     end
 
     context 'having complex cost values' do
@@ -173,16 +181,6 @@ RSpec.describe NOpa do
       before { algorithm.compute }
 
       it { expect(algorithm.assignments).to eq([0,1,3]) }
-    end
-
-    context 'min match not optimal choice for each of every item' do
-      # choosing the min value without regard to order
-      # would result in [2,3,2]
-
-      let(:costs) { [[2,1,0,2,2], [2,3,1,0,2], [2,3,0,1,4]] }
-      before { algorithm.compute }
-
-      it { expect(algorithm.assignments).to eq([1,2,3]) }
     end
 
     context 'having a solution a greedy algorithm would miss' do
@@ -217,15 +215,18 @@ RSpec.describe NOpa do
       it { subject; expect(algorithm.assignments).to eq([21,35,51,63,79,91,103,113,127,139,165,178,190,204,216,233,255,264,281,305,313,331,342,351,358,371,389,405,416,439,466,499,506,515,546,592,607,624,632,646,657,666,680,693,706,716,725,733,739,747,762,773,787,802,812,821,835,846,853,866,875,892,905,914,921,944,961,969,982,990,1009,1011,1029,1041,1056,1067,1072,1091,1097,1105,1109,1125,1127,1150,1160,1172]) }
     end
 
-    # describe 'runtime complexity' do
-    #   let(:benchmarks) { bench_range(4, 512) }
-    #   let(:inputs) do
-    #     benchmarks.map do |b|
-    #       Array.new(b) { Array.new(3*b) { rand(10) } }
-    #     end
-    #   end
-    #
-    #   it { expect{ |n, i| NOpa::DynamicAlgorithm.new(inputs[i], costs: true).compute }.to perform_power.in_range(benchmarks[0], benchmarks[-1]).sample(10).times }
-    # end
+    describe 'runtime complexity' do
+      # the algorithm runs in linear time with the number of edges;
+      # i.e., the number of items in the input matrix.
+
+      let(:benchmarks) { bench_range(4, 512) }
+      let(:inputs) do
+        benchmarks.map do |b|
+          Array.new(b) { Array.new(b) { rand(10) } }
+        end
+      end
+
+      it { expect{ |n, i| NOpa::DynamicAlgorithm.new(inputs[i], costs: true).compute }.to perform_linear.in_range(benchmarks[0], benchmarks[-1]).sample(10).times }
+    end
   end
 end
